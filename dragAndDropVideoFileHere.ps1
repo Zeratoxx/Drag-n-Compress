@@ -1,6 +1,6 @@
 # Compress Drag&Dropped video files.
 
-FOREACH ($inputFile in $args.Split()) {
+FOREACH ($inputFile in $args) {
     $splittedFileName = $inputFile.Split("{.}")
     $outputFile = ""
     FOREACH ($partOfFilename in $splittedFileName) {
