@@ -31,8 +31,25 @@ function Run-InNewProcess {
     start-process PowerShell.exe -argumentlist '-encodedCommand',$encoded
 }
 
+function Check-If-File-Is-Supported([string]$inputFile) {
+    cd $PSScriptRoot
+    $ffprobeLogOutput = & .\ffprobe.exe "$inputFile" 2>&1
+
+    $counter = 0
+    $rowContainsInvalidOrMinusOne = -1
+    FOREACH($ffprobeOutputItem in $ffprobeLogOutput) {
+        IF ($ffprobeOutputItem -like "*Invalid*") {
+            $rowContainsInvalidOrMinusOne = $counter
+        }
+        $counter++
+    }
+
+    return $rowContainsInvalidOrMinusOne.Equals(-1)
+}
 
 # ----------- Code section -----------
+
+$testing = 0
 
 # Compress Drag&Dropped video files.
 FOREACH ($inputFile in $args) {
@@ -50,37 +67,51 @@ FOREACH ($inputFile in $args) {
             $fileType = $partOfFilename
         }
     }
+
+    IF ( $testing.Equals(0) ) {
     
-    IF ($fileType.equals("mp4") -or $fileType.equals("avi")) {
-        Write-Host -ForegroundColor Green @"
+        $fileSupported = Check-If-File-Is-Supported "$inputFile"
+        IF ( $fileSupported ) {
+            Write-Host -ForegroundColor Green @"
 --------------------------------------------------------------------------------------------------------
-InputFile `"$inputFile`" has a valid file type.
+InputFile `"$inputFile`" is readable.
 Compressed file will be saved here:
    `"$outputFile`"
 Starting compression in an own process...
 --------------------------------------------------------------------------------------------------------
 
 "@
-        cd $PSScriptRoot
-        Run-InNewProcess $script -Arg1 "`"$inputFile`"" -Arg2 "`"$outputFile`""
+            cd $PSScriptRoot
+            Run-InNewProcess $script -Arg1 "`"$inputFile`"" -Arg2 "`"$outputFile`""
 
-    } ELSE {
-        Write-Host -ForegroundColor Red @"
+        } ELSE {
+            Write-Host -ForegroundColor Red @"
 --------------------------------------------------------------------------------------------------------
 The file
    `"$inputFile`",
    file type `"$fileType`",
-has not a supported file type.
+has not a supported file.
 
-Only these file types are supported:
-   avi
-   mp4
+Only video files are supported.
 --------------------------------------------------------------------------------------------------------
 
 "@
+        }
+    
+
+    } ELSE {
+        
+        $fileSupported = Check-If-File-Is-Supported "$inputFile"
+        IF ( $fileSupported ) {
+            Write-Host -ForegroundColor Green "File is somehow supported: $inputFile"
+        } ELSE {
+            Write-Host -ForegroundColor Red "File is not supported: $inputFile"
+        }
+
+        Write-Host "`n`n`n"
     }
 }
-
+Write-Host "`n`n`n"
 Write-Host "Script is at his end. The Window is closing itself after Enter got pressed.`n"
 PAUSE
 stop-process -Id $PID
