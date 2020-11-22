@@ -2,7 +2,7 @@
 Author: Nils Badtke
 
 ## Description
-Compresses mp4 or avi video files by drag&amp;drop on the script through FFMPEG
+Compresses mp4 or avi video files by drag&amp;drop on the script through FFMPEG.
 
 ## Installation
 Run `INSTALL.ps1` by right-clicking `INSTALL.ps1` and select "Execute with PowerShell...".
