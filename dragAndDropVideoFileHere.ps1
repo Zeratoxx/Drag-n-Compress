@@ -14,7 +14,7 @@ $script = {
     Write-Host -ForegroundColor Yellow "outputFile: $Arg2"
     Write-Host ""
 
-    .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 "$Arg2"
+    .\ffmpeg.exe -i "$Arg1" -vcodec libx265 -crf 24 "$Arg2"
     Write-Host ""
     Write-Host -ForegroundColor Green "Compression finished.`noutputFile: $Arg2"
     PAUSE;
