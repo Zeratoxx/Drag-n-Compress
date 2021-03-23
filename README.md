@@ -5,7 +5,7 @@ Author: Nils Badtke
 Compresses video files by drag&amp;drop on the script through FFMPEG.
 
 ## Installation
-Run `INSTALL.ps1` by right-clicking `INSTALL.ps1` and select "Execute with PowerShell...".
+Run `isntall.ps1` by right-clicking `install.ps1` and select "Execute with PowerShell...".
 
 ## Usage
 Before the script is working, you need to go through the steps of Installation.  
