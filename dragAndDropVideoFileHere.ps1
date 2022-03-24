@@ -7,17 +7,29 @@ $script = {
         [string]$Arg1,
     
         [Parameter(Position=1)]
-        [string]$Arg2
+        [int]$Arg2,
+
+        [Parameter(Position=2)]
+        [string]$Arg3
     )
+
     
     Write-Host -ForegroundColor Yellow "inputFile: $Arg1"
-    Write-Host -ForegroundColor Yellow "outputFile: $Arg2"
+    Write-Host -ForegroundColor Yellow "amountAudioTracks: $Arg2"
+    Write-Host -ForegroundColor Yellow "outputFile: $Arg3"
     Write-Host ""
 
-    .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 "$Arg2"
+    $audioFilter = ""
+    FOR($i = 0; $i -lt $Arg2; $i++) {
+        $audioFilter += "[0:a:$i]"
+    }
+    $audioFilter += "amix=inputs=$Arg2"
+    $audioFilter += ":normalize=0"
+
+    .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -filter_complex "$audioFilter" "$Arg3"
 
     Write-Host ""
-    Write-Host -ForegroundColor Green "Compression finished.`noutputFile: $Arg2"
+    Write-Host -ForegroundColor Green "Compression finished.`noutputFile: $Arg3"
     PAUSE;
 }
 
@@ -46,6 +58,18 @@ function Check-If-File-Is-Supported([string]$inputFile) {
     }
 
     return $rowContainsInvalidOrMinusOne.Equals(-1)
+}
+
+function Get-Amount-Of-Audio-Tracks([string] $file) {
+    $ffprobeLogOutput = & .\ffprobe.exe "$file" 2>&1
+
+    $counter = 0
+    FOREACH($ffprobeOutputItem in $ffprobeLogOutput) {
+        IF ($ffprobeOutputItem -like "*Audio*") {
+            $counter++
+        }
+    }
+    return $counter
 }
 
 # ----------- Code section -----------
@@ -82,8 +106,9 @@ Starting compression in an own process...
 --------------------------------------------------------------------------------------------------------
 
 "@
+            $amountAudioTracks = Get-Amount-Of-Audio-Tracks "$inputFile"
             cd $PSScriptRoot
-            Run-InNewProcess $script -Arg1 "`"$inputFile`"" -Arg2 "`"$outputFile`""
+            Run-InNewProcess $script -Arg1 "`"$inputFile`"" -Arg2 "`"$amountAudioTracks`"" -Arg3 "`"$outputFile`""
 
         } ELSE {
             Write-Host -ForegroundColor Red @"
