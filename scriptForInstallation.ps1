@@ -52,6 +52,8 @@ IF ( !(Test-Path $registryPathShellOpen) ) {
 } ELSE {
     Set-Item-Property $registryPathShellOpen $nameDefault $valueShellOpen
 }
+Write-Host -ForegroundColor Yellow "Enable executable scripts...`n"
+Set-ExecutionPolicy Bypass
 
 Write-Host -ForegroundColor Yellow "Restarting explorer.exe...`n"
 Restart-Explorer
