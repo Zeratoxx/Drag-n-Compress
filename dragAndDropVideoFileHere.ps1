@@ -23,10 +23,17 @@ $script = {
     FOR($i = 0; $i -lt $Arg2; $i++) {
         $audioFilter += "[0:a:$i]"
     }
-    $audioFilter += "amix=inputs=$Arg2"
-    $audioFilter += ":normalize=0"
+    $audioFilter += "amerge=inputs=$Arg2"
+    # $audioFilter += ":normalize=0" #Only with amix! But amix only supports float sample rate audio, for integer it gets resampled and sounds weird.
 
-    .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -filter_complex "$audioFilter" "$Arg3"
+    # $useAudioFilter = $false
+    # $useAudioFilter = $true
+    [bool] $useAudioFilter = 0
+    IF ($useAudioFilter) {
+        .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -filter_complex "$audioFilter" "$Arg3"
+    } ELSE {
+        .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -ac 2 "$Arg3"
+    }
 
     Write-Host ""
     Write-Host -ForegroundColor Green "Compression finished.`noutputFile: $Arg3"
