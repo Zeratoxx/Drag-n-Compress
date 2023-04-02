@@ -18,22 +18,49 @@ $script = {
     Write-Host -ForegroundColor Yellow "amountAudioTracks: $Arg2"
     Write-Host -ForegroundColor Yellow "outputFile: $Arg3"
     Write-Host ""
+    
+    [bool] $usePan = 1
+    [bool] $normalizePan = 0
+    $audioArgs = ""
+    IF ($Arg2 -gt 0) {
+        $audioFilter = ""
+        $panConfig = ""
+        $leftChannelPan = "c0"
+        $rightChannelPan = "c1"
+        IF ($normalizePan) {
+            $leftChannelPan += "<"
+            $rightChannelPan += "<"
+        } ELSE {
+            $leftChannelPan += "="
+            $rightChannelPan += "="
+        }
 
-    $audioFilter = ""
-    FOR($i = 0; $i -lt $Arg2; $i++) {
-        $audioFilter += "[0:a:$i]"
-    }
-    $audioFilter += "amerge=inputs=$Arg2"
-    # $audioFilter += ":normalize=0" #Only with amix! But amix only supports float sample rate audio, for integer it gets resampled and sounds weird.
+        FOR ($i = 0; $i -lt $Arg2; $i++) {
+            $audioFilter += "[0:a:$i]"
+            $leftChannelPan += "1*c" + ($i * 2 ) + "+" 
+            $rightChannelPan += "1*c" + ($i * 2 + 1) + "+"
+        }
+        $audioFilter += "amerge=inputs=$Arg2"
+        
+        IF ($usePan) {
+            $leftChannelPan = $leftChannelPan -replace ".{1}$"
+            $rightChannelPan = $rightChannelPan -replace ".{1}$"
+            $panConfig += "pan=stereo|$leftChannelPan|$rightChannelPan"
+            $audioFilter += ",$panConfig"
+        }
+        
+        $audioFilter += "[a]"
+        $audioArgs = "-filter_complex `"$audioFilter`" -map `"[a]`""
 
-    # $useAudioFilter = $false
-    # $useAudioFilter = $true
-    [bool] $useAudioFilter = 0
-    IF ($useAudioFilter) {
-        .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -filter_complex "$audioFilter" "$Arg3"
-    } ELSE {
-        .\ffmpeg.exe -i "$Arg1" -vcodec libx264 -crf 24 -ac 2 "$Arg3"
+        IF (!$usePan) {
+            $audioArgs += " -ac 2"
+        }
     }
+
+    $cmd = ".\ffmpeg.exe -i `"$Arg1`" -vcodec libx264 -crf 24 $audioArgs -map `"0:v`" `"$Arg3`""
+    echo "$cmd"
+
+    Invoke-Expression $cmd
 
     Write-Host ""
     Write-Host -ForegroundColor Green "Compression finished.`noutputFile: $Arg3"
