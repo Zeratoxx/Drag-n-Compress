@@ -1,9 +1,8 @@
-# FFMPEG_dragdrop_video_compression
+# Drag'n'Compress
 Author: Nils Badtke
 
 ## Description
-Compresses video files by drag&amp;drop on the script through FFMPEG.  
-Current used version of FFMPEG: `v5.1.2`
+Compress videos with FFmpeg made easy with drag&amp;drop.
 
 ![drag&drop demo](https://user-images.githubusercontent.com/35294329/223697294-fe93649f-05fb-4a4f-8cd3-79e3b0b7cff3.gif)
 
@@ -15,7 +14,15 @@ Current used version of FFMPEG: `v5.1.2`
 
 ![after](https://user-images.githubusercontent.com/35294329/223697544-8b48547f-9eb4-43f1-80ed-b18c34e5575e.png)
 
+## System requirements
+**OS:** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Microsoft Windows 7 or above (due to the use of Powershell)*  
+**Hardware:** &nbsp;*Runs on almost anything. In general, the better the hardware, the faster the compression process.*
+
 ## Installation
+[Download a release package.](https://github.com/Zeratoxx/Drag-n-Compress/releases)  
+A release package is self-contained. That means that FFmpeg is included in a release package.  
+Currently used version of [FFmpeg](https://ffmpeg.org/): [`Codex FFmpeg v5.1.2-full_build`](https://github.com/GyanD/codexffmpeg/releases/tag/5.1.2)
+
 Run `install.ps1` by right-clicking `install.ps1` and select "Execute with PowerShell...".
 
 ## Usage
