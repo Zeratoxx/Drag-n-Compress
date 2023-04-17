@@ -12,21 +12,25 @@ $script = {
         [Parameter(Position=2)]
         [string]$Arg3
     )
-
+    [int] $amountAudioTracks = $Arg2
+    [int] $firstAudioTrackIndex = 0
     
     Write-Host -ForegroundColor Yellow "inputFile: $Arg1"
-    Write-Host -ForegroundColor Yellow "amountAudioTracks: $Arg2"
+    Write-Host -ForegroundColor Yellow "amountAudioTracks: $amountAudioTracks"
     Write-Host -ForegroundColor Yellow "outputFile: $Arg3"
     Write-Host ""
     
     [bool] $usePan = 1
     [bool] $normalizePan = 0
+    [bool] $omitFirstAudioTrack = 0
+    [bool] $omitLastAudioTrack = 1
     $audioArgs = ""
-    IF ($Arg2 -gt 0) {
+    IF ($amountAudioTracks -gt 0) {
         $audioFilter = ""
         $panConfig = ""
         $leftChannelPan = "c0"
         $rightChannelPan = "c1"
+
         IF ($normalizePan) {
             $leftChannelPan += "<"
             $rightChannelPan += "<"
@@ -35,13 +39,32 @@ $script = {
             $rightChannelPan += "="
         }
 
-        FOR ($i = 0; $i -lt $Arg2; $i++) {
-            $audioFilter += "[0:a:$i]"
-            $leftChannelPan += "1*c" + ($i * 2 ) + "+" 
-            $rightChannelPan += "1*c" + ($i * 2 + 1) + "+"
+        IF ($omitLastAudioTrack) {
+            $amountAudioTracks -= 1
+            Write-Host -ForegroundColor Yellow "Omitting last audio track."
         }
-        $audioFilter += "amerge=inputs=$Arg2"
+
+        IF ($omitFirstAudioTrack) {
+            $firstAudioTrackIndex = 1
+            Write-Host -ForegroundColor Yellow "Omitting first audio track."
+        }
+        $j = 0
+        FOR ($i = $firstAudioTrackIndex; $i -lt $amountAudioTracks; $i++) {
+            $audioFilter += "[0:a:$i]"
+            $leftChannelPan += "1*c" + ($j * 2 ) + "+" 
+            $rightChannelPan += "1*c" + ($j * 2 + 1) + "+"
+            $j += 1
+        }
         
+        [int] $amountAudioTracksInput = $amountAudioTracks - $firstAudioTrackIndex
+        $audioFilter += "amerge=inputs=$amountAudioTracksInput"
+
+        Write-Host ""
+        Write-Host -ForegroundColor Green "firstAudioTrackIndex: $firstAudioTrackIndex"
+        Write-Host -ForegroundColor Green "amountAudioTracks: $amountAudioTracks"
+        Write-Host -ForegroundColor Green "amountAudioTracksInput: $amountAudioTracksInput"
+        Write-Host ""
+
         IF ($usePan) {
             $leftChannelPan = $leftChannelPan -replace ".{1}$"
             $rightChannelPan = $rightChannelPan -replace ".{1}$"
@@ -49,15 +72,15 @@ $script = {
             $audioFilter += ",$panConfig"
         }
         
-        $audioFilter += "[a]"
-        $audioArgs = "-filter_complex `"$audioFilter`" -map `"[a]`""
+        $audioFilter += "[0:a]"
+        $audioArgs = "-filter_complex `"$audioFilter`""
 
         IF (!$usePan) {
             $audioArgs += " -ac 2"
         }
     }
 
-    $cmd = ".\ffmpeg.exe -i `"$Arg1`" -vcodec libx264 -crf 24 $audioArgs -map `"0:v`" `"$Arg3`""
+    $cmd = ".\ffmpeg.exe -i `"$Arg1`" -vcodec libx264 -crf 24 -map `"0:v`" $audioArgs -map `"[0:a]`" `"$Arg3`""
     echo "$cmd"
 
     Invoke-Expression $cmd
