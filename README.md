@@ -2,8 +2,8 @@
 Author: Nils Badtke
 
 ## Description
-Compresses video files by drag&amp;drop on the script through FFMPEG.
-Current used version of FFMPEG: v5.1.2
+Compresses video files by drag&amp;drop on the script through FFMPEG.  
+Current used version of FFMPEG: `v5.1.2`
 
 ![drag&drop demo](https://user-images.githubusercontent.com/35294329/223697294-fe93649f-05fb-4a4f-8cd3-79e3b0b7cff3.gif)
 
