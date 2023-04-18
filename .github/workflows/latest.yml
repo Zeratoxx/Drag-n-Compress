@@ -1,0 +1,23 @@
+name: Latest
+
+on:
+  # Triggers the workflow on push events on the default branch
+  push:
+    branches:
+      - ${{ github.event.repository.default_branch }}
+    with:
+      version: "latest"
+
+jobs:
+  create-latest-release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Push tag
+        id: push_tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ inputs.version }}
+          tag_prefix: ''
