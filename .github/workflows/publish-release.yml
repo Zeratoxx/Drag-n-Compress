@@ -9,19 +9,10 @@ on:
 jobs:
   bundle:
     if: github.ref_type == 'tag'
-    runs-on: ubuntu-22.04
-    name: Bundle
-    outputs:
-      artifact-path: ${{ steps.bundle.outputs.artifact-path }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Bundle version ${{ github.ref_name }}
-        id: bundle
-        uses: ./.github/workflows/bundle.yml
-        with:
-          version: ${{ github.ref_name }}
+    name: Bundle version ${{ github.ref_name }}
+    uses: ./.github/workflows/bundle.yml
+    with:
+      version: ${{ github.ref_name }}
 
   publish-release:
     if: github.ref_type == 'tag'
