@@ -6,10 +6,22 @@ on:
         description: 'Version of the bundle'
         required: true
         type: string
+      retention-days:
+        description: 'Amount of time that the artifact gets stored. Default: `2`'
+        required: false
+        default: 2
+        type: number
+    outputs:
+      artifact-path:
+        type: string
+        description: 'Path to built artifact'
+        value: ${{ jobs.create-win-bundle.outputs.artifact-path }}
 
 jobs:
   create-win-bundle:
     runs-on: ubuntu-22.04
+    outputs:
+      artifact-path: ${{ steps.output-artifact-path.outputs.artifact-path }}
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access repo files
       - uses: actions/checkout@v3
@@ -34,6 +46,10 @@ jobs:
       - name: Upload zip as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.version }}win-bundle
+          name: ${{ inputs.version }}/win-bundle
           path: win-bundle_${{ inputs.version }}.zip
-          retention-days: 2
+          retention-days: ${{ inputs.retention-days }}
+
+      - name: Output artifact path
+        id: output-artifact-path
+        run: echo "artifact-path=${{ inputs.version }}/win-bundle" >> $GITHUB_OUTPUT
