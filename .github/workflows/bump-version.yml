@@ -60,3 +60,4 @@ jobs:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN_ZERATOXX }}
           commit_sha: ${{ github.event.inputs.commit_sha }}
           custom_tag: ${{ steps.bump_version.outputs.next-version }}
+          create_annotated_tag: true

@@ -21,3 +21,4 @@ jobs:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN_ZERATOXX }}
           custom_tag: ${{ inputs.version }}
           tag_prefix: ''
+          create_annotated_tag: true
