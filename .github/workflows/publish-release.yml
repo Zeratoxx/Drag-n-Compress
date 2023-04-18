@@ -32,7 +32,7 @@ jobs:
       - name: Publish release
         uses: eloquent/github-release-action@v3
         with:
-          reactions: eyes, hooray, rocket
+          reactions: eyes,hooray,rocket
           assets: |
             - name: ${{ needs.bundle.outputs.artifact-path }}.zip
               path: ${{ steps.download-artifact.outputs.download-path }}/${{ needs.bundle.outputs.artifact-path }}.zip
