@@ -13,7 +13,6 @@ on:
         type: number
     outputs:
       artifact-path:
-        type: string
         description: 'Path to built artifact'
         value: ${{ jobs.create-win-bundle.outputs.artifact-path }}
 
