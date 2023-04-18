@@ -40,7 +40,7 @@ jobs:
           mv ./*.ps1 ./win-bundle/
        
       - name: Create zip with compression  
-        run: zip -9 -r win-bundle_${{ inputs.version }} ./win-bundle/
+        run: zip -9 -r win-bundle_${{ inputs.version }}.zip ./win-bundle/
 
       - name: List files
         run: ls -alh
