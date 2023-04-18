@@ -1,4 +1,5 @@
 name: bundle
+
 on:
   workflow_call:
     inputs:
@@ -48,10 +49,10 @@ jobs:
       - name: Upload zip as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.version }}/win-bundle
+          name: win-bundle_${{ inputs.version }}
           path: win-bundle_${{ inputs.version }}.zip
           retention-days: ${{ inputs.retention-days }}
 
       - name: Output artifact path
         id: output-artifact-path
-        run: echo "artifact-path=${{ inputs.version }}/win-bundle" >> $GITHUB_OUTPUT
+        run: echo "artifact-path=win-bundle_${{ inputs.version }}" >> $GITHUB_OUTPUT
