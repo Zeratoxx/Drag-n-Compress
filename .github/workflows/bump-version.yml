@@ -27,12 +27,6 @@ jobs:
           ref: ${{ github.event.inputs.commit_sha }}
           fetch-depth: '0'
 
-          #  - uses: oprypin/find-latest-tag@v1
-          #    id: previous_tag
-          #    with:
-          #      repository: Zeratoxx/Workflow-Tests
-          #      prefix: v
-
       # WyriHaximus' project is buggy atm (18.04.2023)
       - name: Get Previous tag
         id: previous_tag
@@ -41,6 +35,13 @@ jobs:
           # Optional fallback tag to use when no tag can be found
           fallback: 0.0.0
           prefix: v
+
+      # Probably an alternative
+      #  - uses: oprypin/find-latest-tag@v1
+      #    id: previous_tag
+      #    with:
+      #      repository: Zeratoxx/Drag-n-Compress
+      #      prefix: v
 
       - name: 'Bump version in "${{ github.event.inputs.version_fragment }}" step'
         id: bump_version
