@@ -23,7 +23,7 @@ $script = {
     [bool] $usePan = 1
     [bool] $normalizePan = 0
     [bool] $omitFirstAudioTrack = 0
-    [bool] $omitLastAudioTrack = 1
+    [bool] $omitLastAudioTrack = 0
     $audioArgs = ""
     IF ($amountAudioTracks -gt 0) {
         $audioFilter = ""
