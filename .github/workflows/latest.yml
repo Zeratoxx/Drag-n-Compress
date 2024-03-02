@@ -12,6 +12,8 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Get repo information
         run: |
           echo "Default branch is: ${{ github.event.repository.default_branch }}"
@@ -20,11 +22,11 @@ jobs:
         run: |
           echo "DEV_VERSION=0.0.0" >> $GITHUB_ENV
 
-      - uses: dev-drprasad/delete-tag-and-release@v1.0 # PRERELEASE is v1.0 and can also be used to test and give us feedback
-        with:
-          tag_name: v${{ env.DEV_VERSION }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
+      - name: Delete Release and Tag
+        run: gh release delete v${{ env.DEV_VERSION }} --cleanup-tag
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push tag
         id: push_tag
