@@ -1,20 +1,21 @@
 name: Publish release
 
 on:
+  create:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "*"
 
 jobs:
   bundle:
-    if: github.ref_type == 'tag'
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: Bundle version ${{ github.ref_name }}
     uses: ./.github/workflows/bundle.yml
     with:
       version: ${{ github.ref_name }}
 
   publish-release:
-    if: github.ref_type == 'tag'
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-22.04
     needs: bundle
     name: Publish release
