@@ -45,7 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: refs/tags/${{ github.event.inputs.tag }}
+          ref: ${{ inputs.tag }}
           fetch-tags: true
 
       - name: Download bundle artifact
