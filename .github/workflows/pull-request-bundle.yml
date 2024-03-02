@@ -18,16 +18,10 @@ jobs:
           echo "event ref_name: ${{ github.event.after }}"
 
   bundle:
-    runs-on: ubuntu-22.04
     # Triggers the workflow on events of pull requests with the default branch as the target
     if: github.base_ref == github.event.repository.default_branch
-    steps:
-      - name: Set variable for pull request version
-        run: |
-          echo "PR_VERSION=snapshot-pr-#${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-
-      - name: Bundle snapshot
-        uses: ./.github/workflows/bundle.yml
-        with:
-          version: ${{ env.PR_VERSION }}
-          retention-days: 8
+    name: Bundle version snapshot-pr-#${{ github.event.pull_request.number }}
+    uses: ./.github/workflows/bundle.yml
+    with:
+      version: snapshot-pr-#${{ github.event.pull_request.number }}
+      retention-days: 8
