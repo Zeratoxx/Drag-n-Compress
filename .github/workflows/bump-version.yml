@@ -20,7 +20,7 @@ jobs:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-22.04
     outputs:
-      new-tag: ${{ steps.bump_version.outputs.next-version }}
+      new-tag: v${{ steps.bump_version.outputs.next-version }}
     steps:
       - uses: actions/checkout@v4
         with:

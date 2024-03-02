@@ -27,6 +27,7 @@ jobs:
           commit_sha: ${{ inputs.commit }}
           custom_tag: ${{ inputs.version }}
           create_annotated_tag: true
+          tag_prefix: ''
 
   bundle:
     name: Bundle version ${{ inputs.version }}
