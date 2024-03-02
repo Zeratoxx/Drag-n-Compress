@@ -34,3 +34,6 @@ jobs:
           custom_tag: ${{ env.DEV_VERSION }}
           tag_prefix: v
           create_annotated_tag: true
+
+      - name: Output changelog since last version
+        run: echo "${{ steps.push_tag.outputs.changelog }}"
