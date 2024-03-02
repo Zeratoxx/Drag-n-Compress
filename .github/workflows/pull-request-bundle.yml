@@ -1,18 +1,30 @@
 name: Pull request bundle
 
-on:
-  # Triggers the workflow on events of pull requests with the default branch as the target
-  pull_request:
-    branches:
-      - ${{ github.event.repository.default_branch }}
+on: pull_request
 
 jobs:
+  get-repo-information:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Get repo information
+        run: |
+          echo "github.base_ref: {{ github.base_ref }}"
+          echo "ref: {{ github.ref }}"
+          echo "ref: {{ github.ref_name }}"
+          echo "event ref_name: {{ github.event.ref_name }}"
+          echo "event ref_name: {{ github.event.ref }}"
+          echo "event ref_name: {{ github.event.pull_request.number }}"
+          echo "event ref_name: {{ github.event.before }}"
+          echo "event ref_name: {{ github.event.after }}"
+
   bundle:
     runs-on: ubuntu-22.04
+    # Triggers the workflow on events of pull requests with the default branch as the target
+    if: github.base_ref == github.event.repository.default_branch
     steps:
       - name: Set variable for pull request version
         run: |
-          echo "PR_VERSION=snapshot-${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "PR_VERSION=snapshot-pr-#{{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
       - name: Bundle snapshot
         uses: ./.github/workflows/bundle.yml
