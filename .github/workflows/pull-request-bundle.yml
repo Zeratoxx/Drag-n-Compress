@@ -23,4 +23,6 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
-            Built bundle based on the current state of this Pull Request here: <${{ needs.bundle.outputs.artifact-url }}>
+            A bundle was built by a build job based on the current state of this Pull Request.  
+            Build Job: <${{ needs.bundle.outputs.job-url }}>  
+            Direct download: <${{ needs.bundle.outputs.artifact-url }}>
