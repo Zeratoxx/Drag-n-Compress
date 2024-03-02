@@ -1,10 +1,9 @@
 name: Publish release
 
 on:
-  create:
   push:
     tags:
-      - "*"
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   bundle:
@@ -19,6 +18,8 @@ jobs:
     runs-on: ubuntu-22.04
     needs: bundle
     name: Publish release
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,9 +31,10 @@ jobs:
           name: ${{ needs.bundle.outputs.artifact-path }}
 
       - name: Publish release
-        uses: eloquent/github-release-action@v5
+        uses: ghalactic/github-release-from-tag@v5
         with:
           reactions: eyes,hooray,rocket
           assets: |
             - name: ${{ needs.bundle.outputs.artifact-path }}.zip
               path: ${{ steps.download-artifact.outputs.download-path }}/${{ needs.bundle.outputs.artifact-path }}.zip
+              label: Bundled ZIP file with FFmpeg binaries included
