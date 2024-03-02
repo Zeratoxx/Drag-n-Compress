@@ -1,23 +1,42 @@
 name: Publish release
 
 on:
-  create:
-  push:
-    tags:
-      - "*"
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version of the bundle'
+        required: true
+        type: string
+      commit:
+        description: 'SHA of the commit'
+        required: false
+        default: ${{ github.sha }}
+        type: string
 
 jobs:
+  create-new-tag:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Push tag
+        id: push_tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_sha: ${{ inputs.commit }}
+          custom_tag: ${{ inputs.version }}
+          create_annotated_tag: true
+
   bundle:
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    name: Bundle version ${{ github.ref_name }}
+    name: Bundle version ${{ inputs.version }}
     uses: ./.github/workflows/bundle.yml
     with:
-      version: ${{ github.ref_name }}
+      version: ${{ inputs.version }}
 
   publish-release:
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-22.04
-    needs: bundle
+    needs: [bundle,create-new-tag]
     name: Publish release
     permissions:
       contents: write
@@ -35,6 +54,7 @@ jobs:
         uses: ghalactic/github-release-from-tag@v5
         with:
           reactions: eyes,hooray,rocket
+          generateReleaseNotes: "true"
           assets: |
             - name: ${{ needs.bundle.outputs.artifact-path }}.zip
               path: ${{ steps.download-artifact.outputs.download-path }}/${{ needs.bundle.outputs.artifact-path }}.zip
