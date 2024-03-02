@@ -3,20 +3,6 @@ name: Pull request bundle
 on: pull_request
 
 jobs:
-  get-repo-information:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Get repo information
-        run: |
-          echo "github.base_ref: ${{ github.base_ref }}"
-          echo "ref: ${{ github.ref }}"
-          echo "ref: ${{ github.ref_name }}"
-          echo "event ref_name: ${{ github.event.ref_name }}"
-          echo "event ref_name: ${{ github.event.ref }}"
-          echo "event ref_name: ${{ github.event.pull_request.number }}"
-          echo "event ref_name: ${{ github.event.before }}"
-          echo "event ref_name: ${{ github.event.after }}"
-
   bundle:
     # Triggers the workflow on events of pull requests with the default branch as the target
     if: github.base_ref == github.event.repository.default_branch
@@ -25,3 +11,16 @@ jobs:
     with:
       version: snapshot-pr-#${{ github.event.pull_request.number }}
       retention-days: 8
+
+  link-snapshot-build-in-pull-request:
+    runs-on: ubuntu-22.04
+    needs: bundle
+    name: Link newly created snapshot build in pull request
+    permissions:
+      pull-requests: write
+    steps:
+      - name: "Create sticky comment at pull request with link to artifact: ${{ needs.bundle.outputs.artifact-url }}"
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Built bundle based on the current state of this Pull Request here: <${{ needs.bundle.outputs.artifact-url }}>

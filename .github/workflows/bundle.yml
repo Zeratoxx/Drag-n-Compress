@@ -16,12 +16,16 @@ on:
       artifact-path:
         description: 'Path to built artifact'
         value: ${{ jobs.create-win-bundle.outputs.artifact-path }}
+      artifact-url:
+        description: 'URL to built artifact'
+        value: ${{ jobs.create-win-bundle.outputs.artifact-url }}
 
 jobs:
   create-win-bundle:
     runs-on: ubuntu-22.04
     outputs:
       artifact-path: ${{ steps.output-artifact-path.outputs.artifact-path }}
+      artifact-url: ${{ steps.upload-artifact.outputs.artifact-url }}
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access repo files
       - uses: actions/checkout@v4
@@ -54,6 +58,7 @@ jobs:
         run: ls -alh
 
       - name: Upload zip as artifact
+        id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
           name: win-bundle_${{ inputs.version }}
