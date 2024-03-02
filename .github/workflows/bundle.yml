@@ -19,6 +19,9 @@ on:
       artifact-url:
         description: 'URL to built artifact'
         value: ${{ jobs.create-win-bundle.outputs.artifact-url }}
+      job-url:
+        description: 'URL to build job'
+        value: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 jobs:
   create-win-bundle:
