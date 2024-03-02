@@ -26,16 +26,20 @@ jobs:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access repo files
       - uses: actions/checkout@v3
 
+      - name: Set variable for FFmpeg version
+        run: |
+          echo "FFMPEG_VERSION=$(cat VERSION_FFMPEG)" >> $GITHUB_ENV
+
       - name: Download and unzip FFmpeg
         run: |
-          wget https://github.com/GyanD/codexffmpeg/releases/download/5.1.2/ffmpeg-5.1.2-full_build.zip
-          unzip ffmpeg-5.1.2-full_build.zip
+          wget https://github.com/GyanD/codexffmpeg/releases/download/${{ env.FFMPEG_VERSION }}/ffmpeg-${{ env.FFMPEG_VERSION }}-full_build.zip
+          unzip ffmpeg-${{ env.FFMPEG_VERSION }}-full_build.zip
        
       - name: Create bundle dir
         run: |
           mkdir win-bundle
-          mv ./ffmpeg-5.1.2-full_build/bin/ffmpeg.exe ./win-bundle/
-          mv ./ffmpeg-5.1.2-full_build/bin/ffprobe.exe ./win-bundle/
+          mv ./ffmpeg-${{ env.FFMPEG_VERSION }}-full_build/bin/ffmpeg.exe ./win-bundle/
+          mv ./ffmpeg-${{ env.FFMPEG_VERSION }}-full_build/bin/ffprobe.exe ./win-bundle/
           mv ./LICENSE ./win-bundle/
           mv ./README.md ./win-bundle/
           mv ./*.ps1 ./win-bundle/
