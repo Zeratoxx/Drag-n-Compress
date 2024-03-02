@@ -30,11 +30,14 @@ jobs:
         run: |
           echo "FFMPEG_VERSION=$(cat VERSION_FFMPEG)" >> $GITHUB_ENV
 
-      - name: Download and unzip FFmpeg
+      - name: Job for creating a bundle with version ${{ inputs.version }} and including FFmpeg ${{ env.FFMPEG_VERSION }}
+        run: echo "Creating a bundle with version ${{ inputs.version }} and including FFmpeg ${{ env.FFMPEG_VERSION }} ..."
+
+      - name: Download and unzip FFmpeg Version ${{ env.FFMPEG_VERSION }}
         run: |
           wget https://github.com/GyanD/codexffmpeg/releases/download/${{ env.FFMPEG_VERSION }}/ffmpeg-${{ env.FFMPEG_VERSION }}-full_build.zip
           unzip ffmpeg-${{ env.FFMPEG_VERSION }}-full_build.zip
-       
+
       - name: Create bundle dir
         run: |
           mkdir win-bundle
@@ -43,8 +46,8 @@ jobs:
           mv ./LICENSE ./win-bundle/
           mv ./README.md ./win-bundle/
           mv ./*.ps1 ./win-bundle/
-       
-      - name: Create zip with compression  
+
+      - name: Create zip with compression with version ${{ inputs.version }}
         run: zip -9 -r win-bundle_${{ inputs.version }}.zip ./win-bundle/
 
       - name: List files
