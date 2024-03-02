@@ -27,4 +27,4 @@ jobs:
     needs: cleanup-of-dev-release
     uses: ./.github/workflows/publish-release.yml
     with:
-      version: ${{ needs.cleanup-of-dev-release.outputs.dev-version }}
+      tag: ${{ needs.cleanup-of-dev-release.outputs.dev-version }}

@@ -3,7 +3,7 @@ name: Publish release
 on:
   workflow_call:
     inputs:
-      version:
+      tag:
         description: 'Version of the bundle'
         required: true
         type: string
@@ -25,15 +25,15 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           commit_sha: ${{ inputs.commit }}
-          custom_tag: ${{ inputs.version }}
+          custom_tag: ${{ inputs.tag }}
           create_annotated_tag: true
           tag_prefix: ''
 
   bundle:
-    name: Bundle version ${{ inputs.version }}
+    name: Bundle version ${{ inputs.tag }}
     uses: ./.github/workflows/bundle.yml
     with:
-      version: ${{ inputs.version }}
+      version: ${{ inputs.tag }}
 
   publish-release:
     runs-on: ubuntu-22.04
@@ -44,6 +44,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
+          fetch-tags: true
 
       - name: Download bundle artifact
         id: download-artifact

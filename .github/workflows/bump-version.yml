@@ -57,5 +57,5 @@ jobs:
     uses: ./.github/workflows/publish-release.yml
     needs: bump-version
     with:
-      version: ${{ needs.bump-version.outputs.new-tag }}
+      tag: ${{ needs.bump-version.outputs.new-tag }}
       commit: ${{ inputs.commit_sha }}
