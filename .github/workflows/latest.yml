@@ -4,7 +4,7 @@ on:
   # Triggers the workflow on push events on the default branch
   push:
     branches:
-      - ${{ github.event.repository.default_branch }}
+      - '${{ github.event.repository.default_branch }}'
   workflow_dispatch:
 
 jobs:
@@ -13,6 +13,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Default branch is ${{ github.event.repository.default_branch }}
+        run: |
+          echo "Default branch is: ${{ github.event.repository.default_branch }}"
+
       - name: Set variable for dev version
         run: |
           echo "DEV_VERSION=0.0.0" >> $GITHUB_ENV
