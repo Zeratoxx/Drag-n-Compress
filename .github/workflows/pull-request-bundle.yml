@@ -8,14 +8,14 @@ jobs:
     steps:
       - name: Get repo information
         run: |
-          echo "github.base_ref: {{ github.base_ref }}"
-          echo "ref: {{ github.ref }}"
-          echo "ref: {{ github.ref_name }}"
-          echo "event ref_name: {{ github.event.ref_name }}"
-          echo "event ref_name: {{ github.event.ref }}"
-          echo "event ref_name: {{ github.event.pull_request.number }}"
-          echo "event ref_name: {{ github.event.before }}"
-          echo "event ref_name: {{ github.event.after }}"
+          echo "github.base_ref: ${{ github.base_ref }}"
+          echo "ref: ${{ github.ref }}"
+          echo "ref: ${{ github.ref_name }}"
+          echo "event ref_name: ${{ github.event.ref_name }}"
+          echo "event ref_name: ${{ github.event.ref }}"
+          echo "event ref_name: ${{ github.event.pull_request.number }}"
+          echo "event ref_name: ${{ github.event.before }}"
+          echo "event ref_name: ${{ github.event.after }}"
 
   bundle:
     runs-on: ubuntu-22.04
@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Set variable for pull request version
         run: |
-          echo "PR_VERSION=snapshot-pr-#{{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "PR_VERSION=snapshot-pr-#${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
       - name: Bundle snapshot
         uses: ./.github/workflows/bundle.yml
