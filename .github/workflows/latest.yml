@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+    outputs:
+      dev-version: ${{ env.DEV_VERSION }}
     steps:
       - uses: actions/checkout@v4
       - name: Delete Release and Tag
@@ -26,4 +28,4 @@ jobs:
     needs: cleanup-of-dev-release
     uses: ./.github/workflows/publish-release.yml
     with:
-      version: ${{ env.DEV_VERSION }}
+      version: ${{ needs.cleanup-of-dev-release.outputs.dev-version }}
