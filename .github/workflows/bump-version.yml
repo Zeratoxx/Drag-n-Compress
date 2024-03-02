@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.commit_sha }}
           fetch-depth: '0'
@@ -30,7 +30,7 @@ jobs:
       # WyriHaximus' project is buggy atm (18.04.2023)
       - name: Get Previous tag
         id: previous_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
           # Optional fallback tag to use when no tag can be found
           fallback: 0.0.0

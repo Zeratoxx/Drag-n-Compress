@@ -24,7 +24,7 @@ jobs:
       artifact-path: ${{ steps.output-artifact-path.outputs.artifact-path }}
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access repo files
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set variable for FFmpeg version
         run: |
@@ -51,11 +51,12 @@ jobs:
         run: ls -alh
 
       - name: Upload zip as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: win-bundle_${{ inputs.version }}
           path: win-bundle_${{ inputs.version }}.zip
           retention-days: ${{ inputs.retention-days }}
+          overwrite: true
 
       - name: Output artifact path
         id: output-artifact-path

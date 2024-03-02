@@ -21,16 +21,16 @@ jobs:
     name: Publish release
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download bundle artifact
         id: download-artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ needs.bundle.outputs.artifact-path }}
 
       - name: Publish release
-        uses: eloquent/github-release-action@v3
+        uses: eloquent/github-release-action@v5
         with:
           reactions: eyes,hooray,rocket
           assets: |
