@@ -13,7 +13,7 @@ jobs:
       retention-days: 8
 
   link-snapshot-build-in-pull-request:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: bundle
     name: Link newly created snapshot build in pull request
     permissions:
