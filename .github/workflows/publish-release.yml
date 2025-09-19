@@ -55,7 +55,7 @@ jobs:
           name: ${{ needs.bundle.outputs.artifact-path }}
 
       - name: Publish release
-        uses: ghalactic/github-release-from-tag@v5
+        uses: ghalactic/github-release-from-tag@v6
         with:
           reactions: eyes,hooray,rocket
           generateReleaseNotes: "true"
