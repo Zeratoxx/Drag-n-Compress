@@ -31,7 +31,7 @@ jobs:
       artifact-url: ${{ steps.upload-artifact.outputs.artifact-url }}
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access repo files
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set variable for FFmpeg version
         run: |
