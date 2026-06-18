@@ -22,7 +22,7 @@ jobs:
     outputs:
       new-tag: v${{ steps.bump_version.outputs.next-version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.commit_sha }}
           fetch-depth: '0'
