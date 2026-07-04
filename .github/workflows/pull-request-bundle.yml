@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     steps:
       - name: "Create sticky comment at pull request with link to artifact: ${{ needs.bundle.outputs.artifact-url }}"
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
         with:
           message: |
             A bundle was built by a build job based on the current state of this Pull Request.  
